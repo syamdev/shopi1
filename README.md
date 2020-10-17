@@ -1,0 +1,1 @@
+# shopi-scraper-flask-scrapy
