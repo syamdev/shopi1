@@ -1,0 +1,5 @@
+crochet==1.12.0
+Flask==1.1.2
+Flask-WTF==0.14.3
+Scrapy==2.4.0
+WTForms==2.3.3
