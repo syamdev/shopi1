@@ -10,7 +10,7 @@ from wtforms.validators import DataRequired, Length
 from scrapy import signals
 from scrapy.crawler import CrawlerRunner
 from scrapy.signalmanager import dispatcher
-from scraper import ShopeeSpiderJSON
+from .scraper import ShopeeSpiderJSON
 import os
 import urllib.parse
 import logging
@@ -100,7 +100,7 @@ def get_result():
     if scrape_complete and not output_data:
         return render_template('scrape-error.html', title=title)
     elif scrape_complete:
-        return json.dumps(output_data)
+        return json.dumps(output_data, indent=4)
     elif scrape_in_progress:
         return render_template('scrape-progress.html', title=title)
     else:
@@ -148,4 +148,4 @@ def scrape_logging():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0')
