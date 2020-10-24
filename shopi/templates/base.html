@@ -29,12 +29,15 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/about">About</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/files">Files</a>
+                        </li>
                     </ul>
                 </div>
             </div>
         </nav>
 
-        <div class="container mt-5">
+        <div class="container mt-5" style="min-height: 411px">
             {% block content %}
             {% endblock %}
         </div>
@@ -44,10 +47,10 @@
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 
-        <div class="navbar fixed-bottom navbar-dark bg-dark " style="padding:45px 0 30px">
-            <footer class="mastfoot mt-auto mx-auto">
+        <div class="navbar navbar-dark bg-dark" style="padding-top:15px; margin-top:30px">
+            <footer class="mastfoot mt-auto mx-auto text-center" style="position:relative; bottom:0; height:30px; width:100%;">
                 <div class="inner" style="color:#cccccc">
-                    <p>Created by <a href="https://sy4m.com">Syam</a>. Find other codes on my <a href="https://github.com/syamdev">Github</a>.</p>
+                    <span>Created by <a href="https://sy4m.com">Syam</a>. Built with Flask. Find other codes on my <a href="https://github.com/syamdev">Github</a>.</span>
                 </div>
             </footer>
         </div>
