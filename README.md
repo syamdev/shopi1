@@ -21,7 +21,7 @@
 - File renaming by keyword
 - File list sorted by datetime
 - Error handling if scraping job failed or result file is empty
-- Session expired in 24 hours
+- Session expired in 8 hours
 
 ## Demo
 - http://shopi-v1.sy4m.com

@@ -24,7 +24,7 @@ import secrets
 
 
 secret_key = secrets.token_urlsafe(16)
-session_val = secrets.token_urlsafe(6)
+# session_val = secrets.token_urlsafe(6)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = secret_key
@@ -48,7 +48,6 @@ class InputProductForm(FlaskForm):
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    session['visitor'] = session_val
     title = 'Shopi V1'
     form = InputProductForm()
 
@@ -91,27 +90,24 @@ def home():
 @app.route('/scrape')
 def scrape():
     title = 'Scraping Progress'
-    if 'visitor' in session:
-        # Process scrape data
-        global scrape_in_progress
-        global scrape_complete
-        global input_query
+    # Process scrape data
+    global scrape_in_progress
+    global scrape_complete
+    global input_query
 
-        if scrape_in_progress and input_query:
-            # scrape_in_progress = True
-            global output_data
+    if scrape_in_progress and input_query:
+        # scrape_in_progress = True
+        global output_data
 
-            # log
-            scrape_logging()
+        # log
+        scrape_logging()
 
-            # start the crawler and execute a callback when complete
-            scrape_with_crochet(start_url, output_data, filepath)
-            input_query = False  # set False after scraping in progress
-            return render_template('scrape-progress.html', title=title)
-        elif scrape_complete:
-            return render_template('scrape-complete.html', title=title)
-        else:
-            return render_template('scrape-nojob.html', title=title)
+        # start the crawler and execute a callback when complete
+        scrape_with_crochet(start_url, output_data, filepath)
+        input_query = False  # set False after scraping in progress
+        return render_template('scrape-progress.html', title=title)
+    elif scrape_complete:
+        return render_template('scrape-complete.html', title=title)
     else:
         return render_template('scrape-nojob.html', title=title)
 
