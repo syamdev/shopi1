@@ -34,7 +34,7 @@ app.config['OUTPUT_DIR'] = 'output/'
 output_data = []  # store output
 scrape_in_progress = False
 scrape_complete = False
-input_query = False  # set True after input query
+# input_query = False  # set True after input query
 start_url = ''
 filepath = ''
 
@@ -68,11 +68,14 @@ def home():
         jkt_tz = datetime.datetime.now(pytz.timezone('Asia/Jakarta')).date()
         filepath = 'output/output-{}-{}.json'.format(jkt_tz, filename_kw)
 
-        global input_query
-        input_query = True
+        # global input_query
+        # input_query = True
 
         global scrape_in_progress
         scrape_in_progress = True
+
+        global scrape_complete
+        scrape_complete = False
 
         global output_data
         output_data = []
@@ -81,21 +84,22 @@ def home():
         # if os.path.exists("output/outputjson.json"):
         #     os.remove("output/outputjson.json")
 
-        return redirect(url_for('scrape'))  # Passing to the Scrape function
+        return redirect(url_for('scrape', que=filename_kw))  # Passing to the Scrape function
 
     else:
         return render_template('index.html', title=title, form=form)
 
 
-@app.route('/scrape')
-def scrape():
+@app.route('/scrape/<que>')
+def scrape(que):
     title = 'Scraping Progress'
+    query = que.replace('-', ' ')
     # Process scrape data
     global scrape_in_progress
     global scrape_complete
-    global input_query
+    # global input_query
 
-    if scrape_in_progress and input_query:
+    if scrape_in_progress and not scrape_complete:
         # scrape_in_progress = True
         global output_data
 
@@ -104,10 +108,10 @@ def scrape():
 
         # start the crawler and execute a callback when complete
         scrape_with_crochet(start_url, output_data, filepath)
-        input_query = False  # set False after scraping in progress
-        return render_template('scrape-progress.html', title=title)
+        # input_query = False  # set False after scraping in progress
+        return render_template('scrape-progress.html', title=title, query=query)
     elif scrape_complete:
-        return render_template('scrape-complete.html', title=title)
+        return render_template('scrape-complete.html', title=title, query=query)
     else:
         return render_template('scrape-nojob.html', title=title)
 
@@ -237,6 +241,9 @@ def finished_scrape(null):
     """
     global scrape_complete
     scrape_complete = True
+
+    global scrape_in_progress
+    scrape_in_progress = False
 
 
 def scrape_logging():
