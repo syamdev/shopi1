@@ -20,14 +20,14 @@ import re
 import datetime
 import pytz
 import os
-import secrets
+# import secrets
 
 
-secret_key = secrets.token_urlsafe(16)
+# secret_key = secrets.token_urlsafe(16)
 # session_val = secrets.token_urlsafe(6)
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = secret_key
+app.config['SECRET_KEY'] = "simpleshopeescraperbysyam"
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=8)
 app.config['OUTPUT_DIR'] = 'output/'
 # crawl_runner = CrawlerRunner()  # requires the Twisted reactor to run
