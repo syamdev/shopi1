@@ -10,7 +10,7 @@
              {% for file in files %}
                  <tr>
                      <td class="align-middle">{{ file }}</td>
-                     <td class="align-middle"><div class="float-right"><a class="btn btn-dark" href="/files/{{ file }}" role="button">View</a> <a class="btn btn-dark" href="/download/{{ file }}" role="button">Download</a></div></td>
+                     <td class="align-middle"><div class="float-right"><a class="btn btn-dark" href="/files/{{ file }}" role="button" style="margin: 5px 0">View</a> <a class="btn btn-dark" href="/download/{{ file }}" role="button" style="margin: 5px 0">Download</a></div></td>
                  </tr>
             {% endfor %}
             </tbody>
@@ -19,7 +19,8 @@
         <h5 class="text-center"> There's no file yet.</h5>
         {% endif %}
     </div>
+    {% if pagination %}
     <div class="row" style="justify-content: center; padding-top:15px;">{{ pagination.links }}</div>
-
+    {% endif %}
 </div>
 {% endblock %}

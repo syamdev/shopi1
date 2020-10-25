@@ -1,10 +1,9 @@
-from json import JSONDecodeError
-
 import crochet
 
 crochet.setup()  # initialize crochet
 
 import json
+from json import JSONDecodeError
 from flask import Flask, render_template, redirect, url_for, send_from_directory, abort, session
 from flask_wtf import FlaskForm
 from flask_paginate import Pagination, get_page_args
@@ -29,7 +28,7 @@ session_val = secrets.token_urlsafe(6)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = secret_key
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=24)
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=8)
 app.config['OUTPUT_DIR'] = 'output/'
 # crawl_runner = CrawlerRunner()  # requires the Twisted reactor to run
 output_data = []  # store output
@@ -117,26 +116,26 @@ def scrape():
         return render_template('scrape-nojob.html', title=title)
 
 
-@app.route('/result')
-def get_result():
-    title = 'Result'
-    if 'visitor' in session:
-        # Get the result only if a spider has result
-        global scrape_complete
-
-        if scrape_complete and not output_data:
-            return render_template('scrape-error.html', title=title)
-        elif scrape_complete:
-            # return json.dumps(output_data, indent=4)
-            output_json = json.dumps(output_data, indent=4, separators=(',', ': '))
-            output_fname = filepath.replace('output/', '')
-            return render_template('result-json.html', title=title, output_json=output_json, output_filename=output_fname)
-        elif scrape_in_progress:
-            return render_template('scrape-progress.html', title=title)
-        else:
-            return render_template('scrape-nojob.html', title=title)
-    else:
-        return render_template('scrape-nojob.html', title=title)
+# @app.route('/result')
+# def get_result():
+#     title = 'Result'
+#     if 'visitor' in session:
+#         # Get the result only if a spider has result
+#         global scrape_complete
+#
+#         if scrape_complete and not output_data:
+#             return render_template('scrape-error.html', title=title)
+#         elif scrape_complete:
+#             # return json.dumps(output_data, indent=4)
+#             output_json = json.dumps(output_data, indent=4, separators=(',', ': '))
+#             output_fname = filepath.replace('output/', '')
+#             return render_template('result-json.html', title=title, output_json=output_json, output_filename=output_fname)
+#         elif scrape_in_progress:
+#             return render_template('scrape-progress.html', title=title)
+#         else:
+#             return render_template('scrape-nojob.html', title=title)
+#     else:
+#         return render_template('scrape-nojob.html', title=title)
 
 
 def get_files(files_, offset=0, per_page=10):
@@ -147,30 +146,34 @@ def get_files(files_, offset=0, per_page=10):
 def file_listing():
     title = 'File List'
 
-    # Show directory contents
-    list_files = os.listdir(app.config["OUTPUT_DIR"])
+    try:
+        # Show directory contents
+        list_files = os.listdir(app.config["OUTPUT_DIR"])
 
-    # Sorted by time
-    full_list = [os.path.join(app.config["OUTPUT_DIR"], i) for i in list_files]
-    time_sorted_list = sorted(full_list, key=os.path.getmtime, reverse=True)
-    time_sorted_fname = [os.path.basename(f) for f in time_sorted_list]
+        # Sorted by time
+        full_list = [os.path.join(app.config["OUTPUT_DIR"], i) for i in list_files]
+        time_sorted_list = sorted(full_list, key=os.path.getmtime, reverse=True)
+        time_sorted_fname = [os.path.basename(f) for f in time_sorted_list]
 
-    page, per_page, offset = get_page_args(page_parameter='page',
-                                           per_page_parameter='per_page')
+        page, per_page, offset = get_page_args(page_parameter='page',
+                                               per_page_parameter='per_page')
 
-    # re-assign per_page to change value (default 10)
-    per_page = 10
-    total = len(list_files)
-    pagination_files = get_files(time_sorted_fname, offset=offset, per_page=per_page)
-    pagination = Pagination(page=page, per_page=per_page, total=total,
-                            css_framework='bootstrap4')
-    return render_template('files.html',
-                           title=title,
-                           files=pagination_files,
-                           page=page,
-                           per_page=per_page,
-                           pagination=pagination,
-                           )
+        # re-assign per_page to change value (default 10)
+        per_page = 10
+        total = len(list_files)
+        pagination_files = get_files(time_sorted_fname, offset=offset, per_page=per_page)
+        pagination = Pagination(page=page, per_page=per_page, total=total,
+                                css_framework='bootstrap4')
+        return render_template('files.html',
+                               title=title,
+                               files=pagination_files,
+                               page=page,
+                               per_page=per_page,
+                               pagination=pagination,
+                               )
+    except FileNotFoundError:
+        empty_list = 'List is empty.'
+        return render_template('files.html', title=title, message=empty_list)
 
 
 @app.route("/files/<path:output_filename>")
